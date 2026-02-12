@@ -27,7 +27,7 @@ export const INITIAL_STUDENTS: Student[] = [
   { id: '108024', name: 'KIRUTHIGA K', regNumber: '108024' },
   { id: '108025', name: 'KOWSALYA S M', regNumber: '108025' },
   { id: '108026', name: 'LAVANYA S', regNumber: '108026' },
-  { id: '108027', name: 'LAXMI SWAIN V', regNumber: '108026' },
+  { id: '108027', name: 'LAXMI SWAIN V', regNumber: '108027' },
   { id: '108028', name: 'MADHANRAJ S', regNumber: '108028' },
   { id: '108029', name: 'MADHESH K', regNumber: '108029' },
   { id: '108030', name: 'MADHUMITHA K', regNumber: '108030' },
