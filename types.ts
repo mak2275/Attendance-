@@ -8,6 +8,7 @@ export interface Student {
 export interface SessionAttendance {
   // studentId -> array of missed hour numbers (1, 2, 3, 4, 5, 6, 7)
   hours: Record<string, number[]>;
+  isNoClass?: boolean;
 }
 
 export interface ClassroomData {
