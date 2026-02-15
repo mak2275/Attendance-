@@ -21,27 +21,28 @@ const App: React.FC = () => {
   };
 
   return (
+  <Router>
     <div className="max-w-md mx-auto min-h-screen bg-slate-50 shadow-xl overflow-hidden flex flex-col relative">
-      <Router>
-        <Routes>
-          <Route 
-            path="/" 
-            element={
-              <Dashboard 
-                students={students} 
-                existingRecords={attendanceRecords} 
-                onSave={handleSaveAttendance} 
-              />
-            } 
-          />
-          <Route 
-            path="/student/:id" 
-            element={<StudentDetail students={students} />} 
-          />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            <Dashboard 
+              students={students} 
+              existingRecords={attendanceRecords} 
+              onSave={handleSaveAttendance} 
+            />
+          } 
+        />
+        <Route 
+          path="/student/:id" 
+          element={<StudentDetail students={students} />} 
+        />
+      </Routes>
     </div>
-  );
+  </Router>
+);
+
 };
 
 export default App;
