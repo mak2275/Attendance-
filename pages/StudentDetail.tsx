@@ -9,7 +9,9 @@ import {
   User, 
   Hash, 
   XCircle, 
-  AlertCircle 
+  AlertCircle,
+  Clock,
+  CalendarDays
 } from 'lucide-react';
 
 interface StudentDetailProps {
@@ -34,82 +36,100 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
     );
   }
 
-  const totalAbsences = absenceHistory.reduce((acc, h) => acc + h.hours.length, 0);
+  const totalHoursMissed = absenceHistory.reduce((acc, h) => acc + h.hours.length, 0);
+  const totalAbsentDays = absenceHistory.length;
 
   return (
     <div className="flex flex-col h-screen bg-white">
       <header className="bg-white border-b p-4 flex items-center gap-4 sticky top-0 z-10">
         <button 
           onClick={() => navigate('/')}
-          className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+          className="p-2 hover:bg-slate-100 rounded-full transition-colors active:scale-95"
         >
           <ArrowLeft size={24} className="text-slate-600" />
         </button>
-        <h1 className="text-lg font-bold text-slate-800">Student Profile</h1>
+        <h1 className="text-lg font-black text-slate-800 uppercase tracking-tight">Student Profile</h1>
       </header>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
-        <div className="bg-indigo-50 rounded-2xl p-6 border border-indigo-100 flex flex-col items-center text-center shadow-sm">
-          <div className="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center text-white mb-4 shadow-lg">
-            <User size={40} />
+        {/* Profile Card */}
+        <div className="bg-indigo-50 rounded-[32px] p-8 border border-indigo-100 flex flex-col items-center text-center shadow-md shadow-indigo-100/50">
+          <div className="w-24 h-24 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white mb-5 shadow-xl shadow-indigo-200 rotate-3">
+            <User size={48} />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">{student.name}</h2>
-          <div className="flex items-center gap-1 mt-1 text-indigo-600 bg-indigo-100/50 px-3 py-1 rounded-full">
-            <Hash size={14} />
-            <span className="text-sm font-mono font-semibold">{student.regNumber}</span>
+          <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight leading-tight">{student.name}</h2>
+          <div className="flex items-center gap-1.5 mt-2 text-indigo-600 bg-white/80 px-4 py-1.5 rounded-full border border-indigo-100 shadow-sm">
+            <Hash size={14} className="opacity-60" />
+            <span className="text-xs font-mono font-bold tracking-widest">{student.regNumber}</span>
           </div>
         </div>
 
+        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-rose-50 border border-rose-100 p-4 rounded-xl text-center">
-            <p className="text-[10px] text-rose-600 font-bold uppercase tracking-wider mb-1">Total Hours Missed</p>
-            <p className="text-3xl font-black text-rose-700">{totalAbsences}</p>
+          <div className="bg-rose-50 border border-rose-100 p-5 rounded-3xl text-center shadow-sm">
+            <div className="flex justify-center mb-2 text-rose-500">
+               <Clock size={16} />
+            </div>
+            <p className="text-[10px] text-rose-600 font-black uppercase tracking-widest mb-1">Total Hours</p>
+            <p className="text-3xl font-black text-rose-700">{totalHoursMissed}</p>
           </div>
-          <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center flex flex-col items-center justify-center">
-            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mb-1">Status</p>
-            <p className="text-lg font-bold text-emerald-700">Active</p>
+          <div className="bg-orange-50 border border-orange-100 p-5 rounded-3xl text-center shadow-sm">
+            <div className="flex justify-center mb-2 text-orange-500">
+               <CalendarDays size={16} />
+            </div>
+            <p className="text-[10px] text-orange-600 font-black uppercase tracking-widest mb-1">Total Days</p>
+            <p className="text-3xl font-black text-orange-700">{totalAbsentDays}</p>
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Calendar size={18} className="text-slate-400" />
-            <h3 className="font-bold text-slate-800">Absence History</h3>
+        {/* History Section */}
+        <div className="space-y-5 pb-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-slate-100 rounded-lg text-slate-500">
+                <Calendar size={18} />
+              </div>
+              <h3 className="font-black text-slate-800 text-sm uppercase tracking-tight">Absence History</h3>
+            </div>
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded">Past Logs</span>
           </div>
           
-          <div className="space-y-3 pb-8">
+          <div className="space-y-3">
             {absenceHistory.length > 0 ? (
-              absenceHistory.map((item, index) => (
+              absenceHistory.map((item) => (
                 <div 
                   key={item.date}
-                  className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100"
+                  className="group flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-200 transition-all"
                 >
                   <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-slate-700">
-                      {new Date(item.date).toLocaleDateString('en-US', { 
+                    <span className="text-[11px] font-black text-slate-700 uppercase tracking-tighter">
+                      {new Date(item.date).toLocaleDateString('en-GB', { 
                         weekday: 'short', 
-                        year: 'numeric', 
+                        day: '2-digit',
                         month: 'short', 
-                        day: 'numeric' 
+                        year: 'numeric'
                       })}
                     </span>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {item.hours.map(h => (
-                        <span key={h} className={`text-[9px] font-black w-6 h-6 flex items-center justify-center rounded-md ${
-                          h <= 4 ? 'bg-rose-100 text-rose-600' : 'bg-orange-100 text-orange-600'
+                        <span key={h} className={`text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-lg shadow-sm ${
+                          h <= 4 ? 'bg-rose-500 text-white' : 'bg-orange-500 text-white'
                         }`}>
                           {h}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <XCircle size={20} className="text-rose-500 shrink-0" />
+                  <XCircle size={20} className="text-rose-200 group-hover:text-rose-500 transition-colors" />
                 </div>
               ))
             ) : (
-              <div className="bg-emerald-50/50 border border-dashed border-emerald-200 p-8 rounded-2xl text-center">
-                <p className="text-emerald-600 font-medium">Perfect attendance! ✨</p>
-                <p className="text-xs text-emerald-500 mt-1">This student has never been marked absent.</p>
+              <div className="bg-emerald-50/50 border-2 border-dashed border-emerald-100 p-10 rounded-[32px] text-center">
+                <div className="inline-flex p-3 bg-emerald-100 text-emerald-600 rounded-2xl mb-4">
+                  <AlertCircle size={32} />
+                </div>
+                <p className="text-emerald-700 font-black text-sm uppercase tracking-tight">Perfect Attendance!</p>
+                <p className="text-[10px] text-emerald-500 mt-1 font-bold uppercase tracking-widest">This student has no records of absence.</p>
               </div>
             )}
           </div>
