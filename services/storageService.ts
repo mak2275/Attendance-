@@ -1,4 +1,3 @@
-
 import { Student, SessionAttendance } from '../types';
 import { INITIAL_STUDENTS } from '../constants';
 
@@ -7,23 +6,74 @@ const STORAGE_KEY_STUDENTS = 'classtrack_students';
 const STORAGE_KEY_SYNC_CODE = 'classtrack_sync_code';
 const STORAGE_KEY_LAST_SYNC = 'classtrack_last_sync';
 
+/**
+ * Detect whether localStorage is available
+ */
+function storageAvailable(): boolean {
+  try {
+    const test = '__test__';
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const HAS_STORAGE = storageAvailable();
+
+/**
+ * Safe storage helpers
+ */
+function safeGet(key: string): string | null {
+  if (!HAS_STORAGE) return null;
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSet(key: string, value: string) {
+  if (!HAS_STORAGE) return;
+  try {
+    localStorage.setItem(key, value);
+  } catch {}
+}
+
+function safeRemove(key: string) {
+  if (!HAS_STORAGE) return;
+  try {
+    localStorage.removeItem(key);
+  } catch {}
+}
+
 export const storageService = {
   getStudents: (): Student[] => {
-    const data = localStorage.getItem(STORAGE_KEY_STUDENTS);
+    const data = safeGet(STORAGE_KEY_STUDENTS);
     if (!data) {
-      localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(INITIAL_STUDENTS));
+      safeSet(STORAGE_KEY_STUDENTS, JSON.stringify(INITIAL_STUDENTS));
       return INITIAL_STUDENTS;
     }
-    return JSON.parse(data);
+    try {
+      return JSON.parse(data);
+    } catch {
+      return INITIAL_STUDENTS;
+    }
   },
 
   getRecords: (): Record<string, SessionAttendance> => {
-    const data = localStorage.getItem(STORAGE_KEY_RECORDS);
-    return data ? JSON.parse(data) : {};
+    const data = safeGet(STORAGE_KEY_RECORDS);
+    if (!data) return {};
+    try {
+      return JSON.parse(data);
+    } catch {
+      return {};
+    }
   },
 
   saveRecords: (records: Record<string, SessionAttendance>) => {
-    localStorage.setItem(STORAGE_KEY_RECORDS, JSON.stringify(records));
+    safeSet(STORAGE_KEY_RECORDS, JSON.stringify(records));
   },
 
   saveAttendance: (date: string, sessionAttendance: SessionAttendance) => {
@@ -32,30 +82,36 @@ export const storageService = {
     storageService.saveRecords(records);
   },
 
-  getSyncCode: () => localStorage.getItem(STORAGE_KEY_SYNC_CODE),
+  getSyncCode: () => safeGet(STORAGE_KEY_SYNC_CODE),
+
   setSyncCode: (code: string | null) => {
-    if (code) localStorage.setItem(STORAGE_KEY_SYNC_CODE, code);
-    else localStorage.removeItem(STORAGE_KEY_SYNC_CODE);
+    if (code) safeSet(STORAGE_KEY_SYNC_CODE, code);
+    else safeRemove(STORAGE_KEY_SYNC_CODE);
   },
 
-  getLastSync: () => localStorage.getItem(STORAGE_KEY_LAST_SYNC),
+  getLastSync: () => safeGet(STORAGE_KEY_LAST_SYNC),
+
   updateLastSync: () => {
     const now = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY_LAST_SYNC, now);
+    safeSet(STORAGE_KEY_LAST_SYNC, now);
     return now;
   },
 
-  getStudentAbsenceHistory: (studentId: string): { date: string; hours: number[] }[] => {
+  getStudentAbsenceHistory: (
+    studentId: string
+  ): { date: string; hours: number[] }[] => {
     const records = storageService.getRecords();
     const history: { date: string; hours: number[] }[] = [];
-    
+
     Object.entries(records).forEach(([date, attendance]) => {
       const studentHours = attendance.hours[studentId];
       if (studentHours && studentHours.length > 0) {
         history.push({ date, hours: studentHours });
       }
     });
-    
-    return history.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }
+
+    return history.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  },
 };
