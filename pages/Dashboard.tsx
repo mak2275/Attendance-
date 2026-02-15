@@ -171,7 +171,8 @@ const Dashboard: React.FC<DashboardProps> = ({ students, existingRecords, onSave
       reportLines.push("Forenoon");
       fnAbsentees.forEach(s => {
         const idShort = s.regNumber.slice(-3);
-        const hourStr = s.missed.length < 4 ? ` (${s.missed.join(',')} hrs)` : "";
+        const suffix = s.missed.length === 1 ? 'hr' : 'hrs';
+        const hourStr = ` (${s.missed.join(',')} ${suffix})`;
         reportLines.push(`${globalIndex++})${idShort} ${s.name}${hourStr}`);
       });
       reportLines.push(""); 
@@ -181,7 +182,8 @@ const Dashboard: React.FC<DashboardProps> = ({ students, existingRecords, onSave
       reportLines.push("Afternoon");
       anAbsentees.forEach(s => {
         const idShort = s.regNumber.slice(-3);
-        const hourStr = s.missed.length < 3 ? ` (${s.missed.join(',')} hrs)` : "";
+        const suffix = s.missed.length === 1 ? 'hr' : 'hrs';
+        const hourStr = ` (${s.missed.join(',')} ${suffix})`;
         reportLines.push(`${globalIndex++})${idShort} ${s.name}${hourStr}`);
       });
       reportLines.push("");
@@ -268,21 +270,21 @@ const Dashboard: React.FC<DashboardProps> = ({ students, existingRecords, onSave
                     <p className="text-[10px] text-slate-500 font-mono leading-none mt-0.5">{student.regNumber}</p>
                   </div>
 
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1">
                     {/* Full Day Toggle */}
-                    <button onClick={() => toggleFullDay(student.id)} className={`w-6 h-6 rounded-md text-[10px] font-black border transition-all ${isFullDay ? 'bg-indigo-600 border-indigo-700 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>F</button>
+                    <button onClick={() => toggleFullDay(student.id)} className={`w-5.5 h-5.5 rounded-md text-[9px] font-black border transition-all ${isFullDay ? 'bg-indigo-600 border-indigo-700 text-white shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>F</button>
                     
                     {/* FN Hours */}
                     <div className="flex gap-0.5 bg-slate-50 p-0.5 rounded-md">
                       {FN_HOURS.map(h => (
-                        <button key={h} onClick={() => toggleHour(student.id, h)} className={`w-6 h-6 rounded text-[9px] font-bold border transition-all ${studentHours.includes(h) ? 'bg-rose-500 border-rose-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400'}`}>{h}</button>
+                        <button key={h} onClick={() => toggleHour(student.id, h)} className={`w-5.5 h-5.5 rounded text-[8px] font-bold border transition-all ${studentHours.includes(h) ? 'bg-rose-500 border-rose-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400'}`}>{h}</button>
                       ))}
                     </div>
 
                     {/* AN Hours */}
                     <div className="flex gap-0.5 bg-slate-50 p-0.5 rounded-md">
                       {AN_HOURS.map(h => (
-                        <button key={h} onClick={() => toggleHour(student.id, h)} className={`w-6 h-6 rounded text-[9px] font-bold border transition-all ${studentHours.includes(h) ? 'bg-orange-500 border-orange-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400'}`}>{h}</button>
+                        <button key={h} onClick={() => toggleHour(student.id, h)} className={`w-5.5 h-5.5 rounded text-[8px] font-bold border transition-all ${studentHours.includes(h) ? 'bg-orange-500 border-orange-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-400'}`}>{h}</button>
                       ))}
                     </div>
                   </div>
