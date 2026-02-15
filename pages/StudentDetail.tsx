@@ -52,7 +52,6 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
       </header>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
-        {/* Profile Card */}
         <div className="bg-indigo-50 rounded-[32px] p-8 border border-indigo-100 flex flex-col items-center text-center shadow-md shadow-indigo-100/50">
           <div className="w-24 h-24 bg-indigo-600 rounded-[28px] flex items-center justify-center text-white mb-5 shadow-xl shadow-indigo-200 rotate-3">
             <User size={48} />
@@ -64,7 +63,6 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-rose-50 border border-rose-100 p-5 rounded-3xl text-center shadow-sm">
             <div className="flex justify-center mb-2 text-rose-500">
@@ -77,12 +75,11 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
             <div className="flex justify-center mb-2 text-orange-500">
                <CalendarDays size={16} />
             </div>
-            <p className="text-[10px] text-orange-600 font-black uppercase tracking-widest mb-1">Total Days</p>
+            <p className="text-[10px] text-orange-600 font-black uppercase tracking-widest mb-1">Absent Days</p>
             <p className="text-3xl font-black text-orange-700">{totalAbsentDays}</p>
           </div>
         </div>
 
-        {/* History Section */}
         <div className="space-y-5 pb-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -91,7 +88,6 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
               </div>
               <h3 className="font-black text-slate-800 text-sm uppercase tracking-tight">Absence History</h3>
             </div>
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded">Past Logs</span>
           </div>
           
           <div className="space-y-3">
@@ -99,7 +95,7 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
               absenceHistory.map((item) => (
                 <div 
                   key={item.date}
-                  className="group flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-200 transition-all"
+                  className="group flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm"
                 >
                   <div className="flex flex-col">
                     <span className="text-[11px] font-black text-slate-700 uppercase tracking-tighter">
@@ -120,16 +116,11 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ students }) => {
                       ))}
                     </div>
                   </div>
-                  <XCircle size={20} className="text-rose-200 group-hover:text-rose-500 transition-colors" />
                 </div>
               ))
             ) : (
               <div className="bg-emerald-50/50 border-2 border-dashed border-emerald-100 p-10 rounded-[32px] text-center">
-                <div className="inline-flex p-3 bg-emerald-100 text-emerald-600 rounded-2xl mb-4">
-                  <AlertCircle size={32} />
-                </div>
                 <p className="text-emerald-700 font-black text-sm uppercase tracking-tight">Perfect Attendance!</p>
-                <p className="text-[10px] text-emerald-500 mt-1 font-bold uppercase tracking-widest">This student has no records of absence.</p>
               </div>
             )}
           </div>
